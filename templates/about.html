@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="container">
+        <h2 class="section-title">About North Trips and Travel</h2>
+        
+        <div class="profile-info">
+            <h3 class="section-subtitle">Our Mission</h3>
+            <p>At North Trips and Travel, our mission is to provide unforgettable, safe, and authentic travel experiences to the majestic northern regions of Pakistan. We believe in sustainable tourism that benefits local communities and preserves the natural beauty of the mountains.</p>
+            
+            <h3 class="section-subtitle mt-4">Our Vision</h3>
+            <p>To be the leading and most trusted travel and tourism company in Pakistan, recognized for our commitment to excellence, customer satisfaction, and responsible travel practices.</p>
+            
+            <h3 class="section-subtitle mt-4">What We Offer</h3>
+            <ul>
+                <li><strong>Curated Tours:</strong> Hand-picked destinations and itineraries for a perfect blend of adventure and relaxation.</li>
+                <li><strong>Expert Guides:</strong> Experienced and knowledgeable local guides who ensure your safety and enrich your journey.</li>
+                <li><strong>Customized Travel:</strong> Flexible options for private and group tours to suit every traveler's needs.</li>
+            </ul>
+        </div>
+        
+        <div class="text-center mt-5">
+            <a href="{{ url_for('tours') }}" class="btn btn-primary btn-lg">Start Your Adventure Today</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

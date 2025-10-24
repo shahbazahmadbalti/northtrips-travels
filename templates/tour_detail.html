@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tour.name }} - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="container">
+        <div class="tour-detail-container">
+            <h2 class="section-title">{{ tour.name }}</h2>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="tour-price" style="font-size: 2rem;">{{ format_currency(tour.price) }} / person</span>
+                <a href="{{ url_for('book_tour', tour_id=tour.id) }}" class="btn btn-primary btn-lg">Book Now</a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    {% if tour.image_base64 %}
+                        <img src="data:image/jpeg;base64,{{ tour.image_base64 }}" alt="{{ tour.name }}" class="image-preview" style="max-height: 400px; object-fit: cover; width: 100%;">
+                    {% else %}
+                        <div class="tour-image" style="height: 400px; background-color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">No Image Available</div>
+                    {% endif %}
+                    
+                    <h3 class="section-subtitle mt-3">Description</h3>
+                    <p>{{ tour.description }}</p>
+                    
+                    {% if tour.tour_type == 'group' %}
+                        <h3 class="section-subtitle mt-3">Group Tour Details</h3>
+                        <p><strong>Start Date:</strong> {{ tour.group_start_date }}</p>
+                        <p><strong>Available Seats:</strong> {{ tour.available_seats }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4" style="padding-left: 20px;">
+                    <div class="profile-info">
+                        <h3 class="section-subtitle" style="margin-top: 0;">Key Facts</h3>
+                        <p><strong>Region:</strong> {{ tour.region }}</p>
+                        <p><strong>Duration:</strong> {{ tour.duration }}</p>
+                        <p><strong>Difficulty:</strong> {{ tour.difficulty }}</p>
+                        <p><strong>Type:</strong> {{ tour.tour_type | capitalize }}</p>
+                        <p><strong>Featured:</strong> {{ 'Yes' if tour.featured else 'No' }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="{{ url_for('book_tour', tour_id=tour.id) }}" class="btn btn-primary btn-lg">Book This Tour</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

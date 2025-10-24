@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}All Tours - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="tours-section profile-section">
+    <div class="container">
+        <h2 class="section-title">All Available Tours</h2>
+        
+        <div class="tours-grid">
+            {% for tour in tours %}
+                <div class="tour-card">
+                    <div class="tour-image" style="background-image: url('data:image/jpeg;base64,{{ tour.image_base64 if tour.image_base64 else '' }}');">
+                        {% if tour.featured %}<span class="tour-badge">FEATURED</span>{% endif %}
+                        {% if tour.tour_type == 'group' and tour.available_seats > 0 %}
+                            <span class="tour-badge" style="background-color: var(--success);">{{ tour.available_seats }} Seats Left</span>
+                        {% endif %}
+                    </div>
+                    <div class="tour-content">
+                        <h3 class="tour-title">{{ tour.name }}</h3>
+                        <p class="tour-description">{{ tour.description|truncate(100) }}</p>
+                        <div class="tour-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> {{ tour.region }}</span>
+                            <span><i class="fas fa-clock"></i> {{ tour.duration }}</span>
+                            <span><i class="fas fa-mountain"></i> {{ tour.difficulty }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="tour-price">PKR {{ "{:,.0f}".format(tour.price) }}</span>
+                            <a href="{{ url_for('tour_detail', tour_id=tour.id) }}" class="btn btn-primary btn-sm">Details & Booking</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">No tours are currently listed.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

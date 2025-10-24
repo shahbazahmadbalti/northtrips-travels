@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}North Trips and Travel{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="{{ url_for('index') }}" class="logo">North <span>Trips</span></a>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('tours') }}">Tours</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    {% if 'user_id' in session %}
+                        <li><a href="{{ url_for('profile') }}">Profile ({{ session.user_name }})</a></li>
+                        {% if session.user_role == 'admin' %}
+                            <li><a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-warning">Admin</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="btn btn-sm btn-outline">Login</a></li>
+                        <li><a href="{{ url_for('register') }}" class="btn btn-sm btn-primary">Register</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now().year }} North Trips and Travel. All rights reserved.</p>
+            <p>Designed for the love of the North.</p>
+        </div>
+    </footer>
+</body>
+</html>

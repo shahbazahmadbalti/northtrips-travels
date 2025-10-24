@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Home - North Trips and Travel{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Explore the Majestic North</h1>
+            <p>Your journey to the breathtaking landscapes of Pakistan's northern areas starts here. Adventure awaits!</p>
+            <a href="{{ url_for('tours') }}" class="btn btn-hero">View Our Tours</a>
+        </div>
+    </section>
+
+    <!-- Featured Tours Section -->
+    <section class="tours-section">
+        <div class="container">
+            <h2 class="section-title">Featured Adventures</h2>
+            <div class="tours-grid">
+                {% for tour in tours %}
+                    <div class="tour-card">
+                        <div class="tour-image" style="background-image: url('data:image/jpeg;base64,{{ tour.image_base64 if tour.image_base64 else '' }}');">
+                            {% if tour.featured %}<span class="tour-badge">FEATURED</span>{% endif %}
+                        </div>
+                        <div class="tour-content">
+                            <h3 class="tour-title">{{ tour.name }}</h3>
+                            <p class="tour-description">{{ tour.description|truncate(100) }}</p>
+                            <div class="tour-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> {{ tour.region }}</span>
+                                <span><i class="fas fa-clock"></i> {{ tour.duration }}</span>
+                                <span><i class="fas fa-mountain"></i> {{ tour.difficulty }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="tour-price">PKR {{ "{:,.0f}".format(tour.price) }}</span>
+                                <a href="{{ url_for('tour_detail', tour_id=tour.id) }}" class="btn btn-primary btn-sm">Details & Booking</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center">No featured tours available at the moment.</p>
+                {% endfor %}
+            </div>
+            <div class="text-center">
+                <a href="{{ url_for('tours') }}" class="btn btn-primary">View All Tours</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers Section -->
+    <section class="offers">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us?</h2>
+            <div class="offer-cards">
+                <div class="offer-card">
+                    <h3>Expert Guides</h3>
+                    <p>Our local experts ensure a safe, insightful, and unforgettable journey through the mountains.</p>
+                </div>
+                <div class="offer-card">
+                    <h3>Customizable Trips</h3>
+                    <p>Tailor your adventure to your preferences. Private tours are our specialty.</p>
+                </div>
+                <div class="offer-card">
+                    <h3>Best Value</h3>
+                    <p>We offer competitive pricing without compromising on quality or experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
