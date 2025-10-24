@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Bookings - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Manage Bookings</h2>
+        
+        {% if bookings %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Tour</th>
+                        <th>Date</th>
+                        <th>Participants</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.id }}</td>
+                        <td>{{ booking.user_name }}</td>
+                        <td>{{ booking.user_email }}</td>
+                        <td>{{ booking.tour_name }}</td>
+                        <td>{{ booking.tour_date }}</td>
+                        <td>{{ booking.participants }}</td>
+                        <td>PKR {{ "{:,.0f}".format(booking.total_price) }}</td>
+                        <td>
+                            <span class="status-{{ booking.status }}">{{ booking.status | capitalize }}</span>
+                        </td>
+                        <td class="action-buttons">
+                            {% if not booking.admin_confirmed %}
+                                <a href="{{ url_for('admin_confirm_booking', booking_id=booking.id) }}" class="btn btn-success btn-sm">Confirm</a>
+                            {% endif %}
+                            <a href="{{ url_for('admin_cancel_booking', booking_id=booking.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this booking? This will refund seats for group tours.');">Cancel</a>
+                            <a href="{{ url_for('download_invoice', booking_id=booking.id) }}" class="btn btn-info btn-sm">Invoice</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No bookings found.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

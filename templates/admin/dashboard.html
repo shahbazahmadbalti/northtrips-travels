@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Admin Dashboard</h2>
+        
+        <div class="dashboard-cards">
+            <div class="card primary">
+                <h3>Total Users</h3>
+                <p class="number">{{ total_users }}</p>
+            </div>
+            <div class="card success">
+                <h3>Total Tours</h3>
+                <p class="number">{{ total_tours }}</p>
+            </div>
+            <div class="card warning">
+                <h3>Pending Bookings</h3>
+                <p class="number">{{ pending_bookings }}</p>
+            </div>
+            <div class="card danger">
+                <h3>Open Tickets</h3>
+                <p class="number">{{ open_tickets }}</p>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="section-subtitle">Recent Bookings</h3>
+            <a href="{{ url_for('admin_bookings') }}" class="btn btn-primary">View All Bookings</a>
+        </div>
+        
+        {% if recent_bookings %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Tour</th>
+                        <th>Date</th>
+                        <th>Participants</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in recent_bookings %}
+                    <tr>
+                        <td>{{ booking.id }}</td>
+                        <td>{{ booking.user_name }}</td>
+                        <td>{{ booking.tour_name }}</td>
+                        <td>{{ booking.tour_date }}</td>
+                        <td>{{ booking.participants }}</td>
+                        <td>PKR {{ "{:,.0f}".format(booking.total_price) }}</td>
+                        <td>
+                            <span class="status-{{ booking.status }}">{{ booking.status | capitalize }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No recent bookings.</p>
+        {% endif %}
+        
+        <div class="admin-nav mt-5">
+            <h3 class="section-subtitle">Admin Navigation</h3>
+            <div class="d-flex" style="gap: 10px;">
+                <a href="{{ url_for('admin_tours') }}" class="btn btn-primary">Manage Tours</a>
+                <a href="{{ url_for('admin_bookings') }}" class="btn btn-primary">Manage Bookings</a>
+                <a href="{{ url_for('admin_tickets') }}" class="btn btn-primary">Manage Tickets</a>
+                <a href="{{ url_for('admin_users') }}" class="btn btn-primary">Manage Users</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

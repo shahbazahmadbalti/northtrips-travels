@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Tour - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Edit Tour: {{ tour.name }}</h2>
+        
+        <div class="profile-info mb-4">
+            <form method="POST" action="{{ url_for('admin_edit_tour', tour_id=tour.id) }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Tour Name</label>
+                    <input type="text" id="name" name="name" value="{{ tour.name }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required>{{ tour.description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price (PKR)</label>
+                    <input type="number" id="price" name="price" step="any" value="{{ tour.price }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="region">Region</label>
+                    <input type="text" id="region" name="region" value="{{ tour.region }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input type="text" id="duration" name="duration" value="{{ tour.duration }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="Easy" {% if tour.difficulty == 'Easy' %}selected{% endif %}>Easy</option>
+                        <option value="Moderate" {% if tour.difficulty == 'Moderate' %}selected{% endif %}>Moderate</option>
+                        <option value="Challenging" {% if tour.difficulty == 'Challenging' %}selected{% endif %}>Challenging</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tour_type">Tour Type</label>
+                    <select id="tour_type" name="tour_type" required>
+                        <option value="private" {% if tour.tour_type == 'private' %}selected{% endif %}>Private</option>
+                        <option value="group" {% if tour.tour_type == 'group' %}selected{% endif %}>Group</option>
+                    </select>
+                </div>
+                <div class="form-group" id="seats-group">
+                    <label for="available_seats">Available Seats (for Group Tours)</label>
+                    <input type="number" id="available_seats" name="available_seats" value="{{ tour.available_seats }}" min="0">
+                </div>
+                <div class="form-group" id="date-group">
+                    <label for="group_start_date">Group Start Date</label>
+                    <input type="date" id="group_start_date" name="group_start_date" value="{{ tour.group_start_date or '' }}">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="featured" name="featured" {% if tour.featured %}checked{% endif %}>
+                        <label for="featured">Featured Tour</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image">Image (Optional - max 16MB)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                    {% if tour.image %}
+                        <p class="mt-2">Current Image is set. Uploading a new file will replace it.</p>
+                    {% else %}
+                        <p class="mt-2">No image currently set.</p>
+                    {% endif %}
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Tour</button>
+                    <a href="{{ url_for('admin_tours') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tourType = document.getElementById('tour_type');
+                const seatsGroup = document.getElementById('seats-group');
+                const dateGroup = document.getElementById('date-group');
+                
+                function toggleGroupFields() {
+                    if (tourType.value === 'group') {
+                        seatsGroup.style.display = 'block';
+                        dateGroup.style.display = 'block';
+                        document.getElementById('available_seats').setAttribute('required', 'required');
+                        document.getElementById('group_start_date').setAttribute('required', 'required');
+                    } else {
+                        seatsGroup.style.display = 'none';
+                        dateGroup.style.display = 'none';
+                        document.getElementById('available_seats').removeAttribute('required');
+                        document.getElementById('group_start_date').removeAttribute('required');
+                    }
+                }
+                
+                tourType.addEventListener('change', toggleGroupFields);
+                toggleGroupFields(); // Initial call
+            });
+        </script>
+    </div>
+</section>
+{% endblock %}

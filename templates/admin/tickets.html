@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Support Tickets - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Manage Support Tickets</h2>
+        
+        {% if tickets %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Response</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td>{{ ticket.user_name }}</td>
+                        <td>{{ ticket.user_email }}</td>
+                        <td>{{ ticket.subject }}</td>
+                        <td>{{ ticket.message | truncate(50) }}</td>
+                        <td>
+                            <span class="status-{{ 'success' if ticket.status == 'closed' else 'warning' }}">{{ ticket.status | capitalize }}</span>
+                        </td>
+                        <td>{{ ticket.admin_response | truncate(50) or 'N/A' }}</td>
+                        <td class="action-buttons">
+                            {% if ticket.status == 'open' %}
+                                <button class="btn btn-primary btn-sm" onclick="document.getElementById('response-form-{{ ticket.id }}').style.display='block'; this.style.display='none';">Respond</button>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>Closed</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr id="response-form-{{ ticket.id }}" style="display: none;">
+                        <td colspan="8">
+                            <form method="POST" action="{{ url_for('admin_tickets') }}" class="mt-2 mb-2">
+                                <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                                <div class="form-group">
+                                    <label for="response-{{ ticket.id }}">Admin Response</label>
+                                    <textarea id="response-{{ ticket.id }}" name="response" required class="form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm">Send Response & Close Ticket</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No support tickets found.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

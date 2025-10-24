@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Tours - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Manage Tours</h2>
+        
+        <div class="profile-info mb-4">
+            <h3 class="section-subtitle">Add New Tour</h3>
+            <form method="POST" action="{{ url_for('admin_tours') }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Tour Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price (PKR)</label>
+                    <input type="number" id="price" name="price" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="region">Region</label>
+                    <input type="text" id="region" name="region" required>
+                </div>
+                <div class="form-group">
+                    <label for="duration">Duration</label>
+                    <input type="text" id="duration" name="duration" required>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="Easy">Easy</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="Challenging">Challenging</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tour_type">Tour Type</label>
+                    <select id="tour_type" name="tour_type" required>
+                        <option value="private">Private</option>
+                        <option value="group">Group</option>
+                    </select>
+                </div>
+                <div class="form-group" id="seats-group" style="display: none;">
+                    <label for="available_seats">Available Seats (for Group Tours)</label>
+                    <input type="number" id="available_seats" name="available_seats" value="0" min="0">
+                </div>
+                <div class="form-group" id="date-group" style="display: none;">
+                    <label for="group_start_date">Group Start Date</label>
+                    <input type="date" id="group_start_date" name="group_start_date">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="featured" name="featured">
+                        <label for="featured">Featured Tour</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image">Image (Optional - max 16MB)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Add Tour</button>
+                </div>
+            </form>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tourType = document.getElementById('tour_type');
+                const seatsGroup = document.getElementById('seats-group');
+                const dateGroup = document.getElementById('date-group');
+                
+                function toggleGroupFields() {
+                    if (tourType.value === 'group') {
+                        seatsGroup.style.display = 'block';
+                        dateGroup.style.display = 'block';
+                        document.getElementById('available_seats').setAttribute('required', 'required');
+                        document.getElementById('group_start_date').setAttribute('required', 'required');
+                    } else {
+                        seatsGroup.style.display = 'none';
+                        dateGroup.style.display = 'none';
+                        document.getElementById('available_seats').removeAttribute('required');
+                        document.getElementById('group_start_date').removeAttribute('required');
+                    }
+                }
+                
+                tourType.addEventListener('change', toggleGroupFields);
+                toggleGroupFields(); // Initial call
+            });
+        </script>
+
+        <h3 class="section-subtitle">Existing Tours</h3>
+        {% if tours %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Region</th>
+                        <th>Type</th>
+                        <th>Featured</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tour in tours %}
+                    <tr>
+                        <td>{{ tour.id }}</td>
+                        <td>{{ tour.name }}</td>
+                        <td>PKR {{ "{:,.0f}".format(tour.price) }}</td>
+                        <td>{{ tour.region }}</td>
+                        <td>{{ tour.tour_type | capitalize }}</td>
+                        <td>{{ 'Yes' if tour.featured else 'No' }}</td>
+                        <td class="action-buttons">
+                            <a href="{{ url_for('admin_edit_tour', tour_id=tour.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ url_for('admin_delete_tour', tour_id=tour.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this tour? All related bookings will be affected.');">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tours have been added yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
