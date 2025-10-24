@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Users - North Trips and Travel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <h2 class="section-title">Manage Users</h2>
+        
+        {% if users %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Registered On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role | capitalize }}</td>
+                        <td>{{ user.created_at }}</td>
+                        <td class="action-buttons">
+                            {% if user.role != 'admin' %}
+                                <a href="{{ url_for('admin_delete_user', user_id=user.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete user {{ user.name }}?');">Delete</a>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>Admin</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
